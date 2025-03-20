@@ -24,6 +24,7 @@
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
     "tippy.js": "^6.3.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "xeokit-bim-viewer": "^2.4.79"
   }
 }
