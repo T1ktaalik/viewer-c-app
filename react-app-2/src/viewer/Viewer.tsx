@@ -12,6 +12,9 @@ export default function Viewer() {
   const bimViewer = useRef<typeof BIMViewer>(null);
   const bimViewerServer = useRef<typeof Server>(null);
 
+ let [inspectorState, setInspectorState] = useState(false)
+  
+ 
   // The viewer elements
   const viewerWrapper = useRef(null);
   const explorer = useRef(null);
@@ -21,12 +24,19 @@ export default function Viewer() {
   const navCube = useRef(null);
 
   const listOfProjects = { projects: [] };
+  
 
   useEffect(() => {
-    loadViewer()
-  })
+    setInspectorState(()=> true)
+   console.log("inspectorState", inspectorState)
+   /*  loadViewer() */
+   if(inspectorState) {loadViewer()}
+  }, [inspectorState] )
+
+  
 
   function loadViewer() {
+    
     bimViewerServer.current = new Server({
       dataDir: "./",
     })
@@ -53,14 +63,8 @@ export default function Viewer() {
     bimViewer.current.on("openInspector", () => {
       console.log("open inspector");
     })
-
-    
+  
   }
-
-  function loadProject() {
-    bimViewer.current.loadProject("Duplex")
-  }
-
   return (
     <div
       ref={viewerWrapper}
@@ -83,7 +87,7 @@ export default function Viewer() {
         ></canvas>
       </div>
       <div ref={inspector} id="inspector" className="w-1/4 overflow-hidden ">
-        <Inspector />
+      { inspectorState ? <Inspector /> : <div> Нет еще</div>}
       </div>
     </div>
   );
