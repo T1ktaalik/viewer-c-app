@@ -77,7 +77,7 @@ function createExplorerTemplate(cfg) {
     return explorerTemplate;
 }
 
-function createToolbarTemplate(cfg = {}) {
+/* function createToolbarTemplate(cfg = {}) {
     const toolbarTemplate = `<div class="xeokit-toolbar">
     <!-- Reset button -->
     <div class="xeokit-btn-group">
@@ -119,7 +119,7 @@ function createToolbarTemplate(cfg = {}) {
 </div>`;
     return toolbarTemplate;
 }
-
+ */
 
 
 function initTabs(containerElement) {
@@ -260,8 +260,8 @@ class BIMViewer extends Controller {
         this._customizeViewer();
         this._initCanvasContextMenus();
 
-        explorerElement.innerHTML = createExplorerTemplate(cfg);
-        toolbarElement.innerHTML = createToolbarTemplate({enableMeasurements: this._enableMeasurements});
+      explorerElement.innerHTML = createExplorerTemplate(cfg);
+    /*    toolbarElement.innerHTML = createToolbarTemplate({enableMeasurements: this._enableMeasurements}); */
        /*  if (this._enablePropertiesInspector) {
             inspectorElement.innerHTML = createInspectorTemplate();
         } */

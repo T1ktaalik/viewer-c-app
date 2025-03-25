@@ -2,20 +2,18 @@ import { useRef, useEffect, useState } from "react";
 //import { BIMViewer, Server } from "@xeokit/xeokit-bim-viewer";
 import { BIMViewer } from "/src/xeokitBimViewerSrc/BIMViewer.js";
 import { Server } from "/src/xeokitBimViewerSrc/server/Server.js";
-import Explorer from "/src/viewer/Explorer";
-import Inspector from "/src/viewer/Inspector";
+import Explorer from "/src/viewer/Explorer"
+import Inspector from "/src/viewer/Inspector.tsx"
+import Toolbar from "/src/viewer/Toolbar"
 import "/src/css/xeokit-bim-viewer.css";
 import "/src/css/style.css";
 
 export default function Viewer() {
-  // The viewer instances
+  /* The viewer instances */
   const bimViewer = useRef<typeof BIMViewer>(null);
   const bimViewerServer = useRef<typeof Server>(null);
 
- let [inspectorState, setInspectorState] = useState(false)
-  
- 
-  // The viewer elements
+  /* The viewer elements */
   const viewerWrapper = useRef(null);
   const explorer = useRef(null);
   const inspector = useRef(null);
@@ -25,22 +23,20 @@ export default function Viewer() {
 
   const listOfProjects = { projects: [] };
   
-
-  useEffect(() => {
-    setInspectorState(()=> true)
-   console.log("inspectorState", inspectorState)
-   /*  loadViewer() */
-   if(inspectorState) {loadViewer()}
-  }, [inspectorState] )
-
+  let [componentState, setcomponentsState] = useState(true)
   
-
+  useEffect(() => {
+    console.log(window.document.body)
+/*    loadViewer() */
+  } )
   function loadViewer() {
+    setcomponentsState(()=> true)
     
+     if (!componentState) return
     bimViewerServer.current = new Server({
       dataDir: "./",
     })
-
+  
     bimViewer.current = new BIMViewer(bimViewerServer.current, {
       canvasElement: viewerCanvas.current,
       explorerElement: explorer.current,
@@ -49,7 +45,7 @@ export default function Viewer() {
       navCubeCanvasElement: navCube.current,
       busyModalBackdropElement: viewerWrapper.current,
     })
-
+  
     bimViewerServer.current.getProjects(
       (projects: { projects: [] }) => {
         listOfProjects.projects = projects.projects;
@@ -59,10 +55,11 @@ export default function Viewer() {
         console.log(err);
       }
     )
-
+  
     bimViewer.current.on("openInspector", () => {
       console.log("open inspector");
     })
+
   
   }
   return (
@@ -74,7 +71,9 @@ export default function Viewer() {
         {/*   {explorerLoaded ? <Explorer /> : <div>Loading...</div>} */}
       </div>
       <div id="viewer" className="w-1/2 overflow-hidden relative h-full ">
-        <div ref={toolbar} id="toolbar" className="absolute top-0 left-0"></div>
+        <div ref={toolbar} id="toolbar" className="absolute top-0 left-0">
+        { componentState ? <Toolbar /> : <div> Нет еще</div>}
+        </div>
         <canvas
           ref={viewerCanvas}
           id="canvas"
@@ -87,7 +86,7 @@ export default function Viewer() {
         ></canvas>
       </div>
       <div ref={inspector} id="inspector" className="w-1/4 overflow-hidden ">
-      { inspectorState ? <Inspector /> : <div> Нет еще</div>}
+      { componentState ? <Inspector /> : <div> Нет еще</div>}
       </div>
     </div>
   );
