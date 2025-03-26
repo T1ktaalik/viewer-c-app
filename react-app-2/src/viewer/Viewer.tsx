@@ -25,10 +25,10 @@ export default function Viewer() {
   
   let [componentState, setcomponentsState] = useState(true)
   
-  useEffect(() => {
-    console.log(window.document.body)
-/*    loadViewer() */
-  } )
+  useEffect(() => { loadViewer()}, [] )
+
+   
+ 
   function loadViewer() {
     setcomponentsState(()=> true)
     
@@ -68,7 +68,7 @@ export default function Viewer() {
       className="flex flex-row overflow-hidden h-full w-full"
     >
       <div ref={explorer} id="explorer" className="w-1/4 overflow-hidden h-full">
-        {/*   {explorerLoaded ? <Explorer /> : <div>Loading...</div>} */}
+          {componentState ? <Explorer /> : <div>Loading...</div>}
       </div>
       <div id="viewer" className="w-1/2 overflow-hidden relative h-full ">
         <div ref={toolbar} id="toolbar" className="absolute top-0 left-0">

@@ -1,6 +1,7 @@
 export default function Inspector(): React.ReactNode {
     return (
-<div className="xeokit-tabs">
+<div  className="xeokit-tabs">
+
   <div className="xeokit-tab xeokit-propertiesTab">
     <a
       className="xeokit-i18n xeokit-tab-btn disabled"
