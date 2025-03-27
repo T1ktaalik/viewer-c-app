@@ -8,6 +8,13 @@ import Toolbar from "/src/viewer/Toolbar"
 import "/src/css/xeokit-bim-viewer.css";
 import "/src/css/style.css";
 
+//import * as React from 'react'
+import { useSearchParams } from 'react-router-dom';
+ 
+//use react context
+import { useContext } from 'react';
+
+
 export default function Viewer() {
   /* The viewer instances */
   const bimViewer = useRef<typeof BIMViewer>(null);
@@ -21,11 +28,19 @@ export default function Viewer() {
   const viewerCanvas = useRef(null);
   const navCube = useRef(null);
 
+  /* To get data from a query. Such as projectId and BCFViewepoint*/
+
+  //https://dev.to/vikram-boominathan/search-params-and-use-location-5b7h
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  console.log(searchParams.get("projectId"))
   const listOfProjects = { projects: [] };
   
   let [componentState, setcomponentsState] = useState(true)
   
-  useEffect(() => { loadViewer()}, [] )
+  useEffect(() => { 
+
+    loadViewer()}, [location] )
 
    
  
@@ -55,12 +70,10 @@ export default function Viewer() {
         console.log(err);
       }
     )
-  
     bimViewer.current.on("openInspector", () => {
       console.log("open inspector");
     })
-
-  
+ 
   }
   return (
     <div
