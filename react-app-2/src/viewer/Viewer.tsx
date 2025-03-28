@@ -33,17 +33,22 @@ export default function Viewer() {
   //https://dev.to/vikram-boominathan/search-params-and-use-location-5b7h
   const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log(searchParams.get("projectId"))
+ 
   const listOfProjects = { projects: [] };
   
   let [componentState, setcomponentsState] = useState(true)
   
   useEffect(() => { 
-
+    console.log(searchParams.get("projectId"))
     loadViewer()}, [location] )
 
-   
- 
+  function setBCFViewpoint() {
+    console.log(bimViewer.current.setBCFViewpoint())
+  return  bimViewer.current.setBCFViewpoint()
+  
+  }
+  
+  
   function loadViewer() {
     setcomponentsState(()=> true)
     
@@ -85,7 +90,7 @@ export default function Viewer() {
       </div>
       <div id="viewer" className="w-1/2 overflow-hidden relative h-full ">
         <div ref={toolbar} id="toolbar" className="absolute top-0 left-0">
-        { componentState ? <Toolbar /> : <div> Нет еще</div>}
+        { componentState ? <div><Toolbar /> <button className="xeokit-btn" onClick={setBCFViewpoint} >GET BCF</button></div>  : <div> Нет еще</div>}
         </div>
         <canvas
           ref={viewerCanvas}

@@ -1,4 +1,5 @@
 export default function Toolbar () {
+    
     return (
         <div className="xeokit-toolbar">    
   {/* Reset button */}
@@ -104,6 +105,7 @@ export default function Toolbar () {
         data-tippy-content="Number of existing slices"
       />
     </button>
+    
   </div>
 </div>
     )
