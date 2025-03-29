@@ -1,20 +1,13 @@
 import { useRef, useEffect, useState } from "react";
-//import { BIMViewer, Server } from "@xeokit/xeokit-bim-viewer";
 import { BIMViewer } from "/src/xeokitBimViewerSrc/BIMViewer.js";
 import { Server } from "/src/xeokitBimViewerSrc/server/Server.js";
 import Explorer from "/src/viewer/Explorer"
 import Inspector from "/src/viewer/Inspector.tsx"
 import Toolbar from "/src/viewer/Toolbar"
-import "/src/css/xeokit-bim-viewer.css";
-import "/src/css/style.css";
 
 //import * as React from 'react'
 import { useSearchParams } from 'react-router-dom';
  
-//use react context
-import { useContext } from 'react';
-
-
 export default function Viewer() {
   /* The viewer instances */
   const bimViewer = useRef<typeof BIMViewer>(null);
@@ -29,10 +22,8 @@ export default function Viewer() {
   const navCube = useRef(null);
 
   /* To get data from a query. Such as projectId and BCFViewepoint*/
-
   //https://dev.to/vikram-boominathan/search-params-and-use-location-5b7h
   const [searchParams, setSearchParams] = useSearchParams();
-
  
   const listOfProjects = { projects: [] };
   
@@ -40,7 +31,10 @@ export default function Viewer() {
   
   useEffect(() => { 
     console.log(searchParams.get("projectId"))
-    loadViewer()}, [location] )
+    
+    let projectId = searchParams.get("projectId")
+    
+    loadViewer(projectId)}, [location] )
 
   function setBCFViewpoint() {
     console.log(bimViewer.current.setBCFViewpoint())
@@ -49,7 +43,7 @@ export default function Viewer() {
   }
   
   
-  function loadViewer() {
+  function loadViewer(project: string | null) {
     setcomponentsState(()=> true)
     
      if (!componentState) return
@@ -69,7 +63,7 @@ export default function Viewer() {
     bimViewerServer.current.getProjects(
       (projects: { projects: [] }) => {
         listOfProjects.projects = projects.projects;
-        bimViewer.current.loadProject("Duplex");
+        bimViewer.current.loadProject(project);
       },
       (err: any) => {
         console.log(err);
