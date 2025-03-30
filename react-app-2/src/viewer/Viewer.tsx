@@ -12,7 +12,7 @@ import Toolbar from "/src/viewer/Toolbar"
 /** UI components */
 import copy from 'copy-to-clipboard';
 
-/* import { qs } from 'qs' */
+import  qs from 'qs'
 
 export default function Viewer() {
   /* The viewer instances */
@@ -29,7 +29,7 @@ export default function Viewer() {
   
   /** Get data from the URL */
   const requestedParams: any = useRef(null)  
-  const bcfViewPoint = useRef('the string');
+  const bcfViewPoint = useRef(null);
 
 
 
@@ -40,43 +40,27 @@ export default function Viewer() {
 
 
   
-  getRequestParams()
-
-  
-
   useEffect(() => { 
-    console.log(searchParams.get("projectId"))
+
     let projectId = searchParams.get("projectId")
-    console.log(searchParams.get("view"))
+    let view = searchParams.get("view") 
+    if (view) {
+      bcfViewPoint.current = qs.parse(view)
+    } 
     loadViewer(projectId)}, [location] )
 
-    
   
-
-    function getRequestParams() {
- /*      console.log(searchParams)
-      console.log(searchParams.get("projectId"))
-      console.log(searchParams.get("bcfViewPoint"))
-      requestedParams.current.projectId = searchParams.get("projectId")
-      requestedParams.current.bcfViewPoint = searchParams.get("bcfViewPoint") */
-
-    }
-
-/*     function setRequestParams() {
-      searchParams.set("projectId", requestedParams.current.projectId)
-      searchParams.set("bcfViewPoint", requestedParams.current.bcfViewPoint)
-    } */
-   function handleCopy() {
-    copy(bcfViewPoint.current)
-  }  
   function saveBCFViewpoint() {
-    bcfViewPoint.current = bimViewer.current.saveBCFViewpoint()
-    setSearchParams({...Object.fromEntries(searchParams) , view: bcfViewPoint.current})
+    let x =  bimViewer.current.saveBCFViewpoint()
+    x.snapshot = {}
+    x.bitmaps = []
+    console.log(x)
+    console.log(Object.keys(x).length)
+    let y = qs.stringify(x)
+    console.log(y)
+    setSearchParams({...Object.fromEntries(searchParams) , view: y})
   }
-  function loadBCFViewpoint() {
-  /*   if (!bcfViewPoint) return */
-    bimViewer.current.loadBCFViewpoint(bcfViewPoint.current, { immediate: false})
-  }
+ 
   function loadViewer(project: string | null) {
     bimViewerServer.current = new Server({
       dataDir: "./",
@@ -94,15 +78,16 @@ export default function Viewer() {
     bimViewerServer.current.getProjects(
       (projects: { projects: [] }) => {
         listOfProjects.projects = projects.projects;
-        bimViewer.current.loadProject(project);
+        bimViewer.current.loadProject(project, () => {
+          if (bcfViewPoint.current) {
+            bimViewer.current.loadBCFViewpoint(bcfViewPoint.current, {immediate: true});
+          }
+        });
       },
       (err: any) => {
         console.log(err);
       }
     )
-    bimViewer.current.on("openInspector", () => {
-      console.log("open inspector");
-    })
   }
   return (
     <div
@@ -115,9 +100,7 @@ export default function Viewer() {
       <div id="viewer" className="w-1/2 overflow-hidden relative h-full ">
         <div ref={toolbar} id="toolbar" className="absolute top-0 left-0">
         <Toolbar /> 
-        <button className="xeokit-btn" onClick={saveBCFViewpoint} >save Viewpoint</button> 
-        <button className="xeokit-btn" onClick={loadBCFViewpoint} >SET  Viewpoint</button>
-        <button className="xeokit-btn" onClick={handleCopy} >Возьми ссылку</button>
+        <button className="xeokit-btn" onClick={saveBCFViewpoint} >Create a Viewpoint</button> 
         </div>
         <canvas
           ref={viewerCanvas}
