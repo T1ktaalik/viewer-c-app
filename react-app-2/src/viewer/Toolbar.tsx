@@ -1,4 +1,6 @@
-export default function Toolbar () {
+import React from 'react'
+
+ function Toolbar (): React.ReactNode {
     
     return (
         <div className="xeokit-toolbar">    
@@ -110,3 +112,5 @@ export default function Toolbar () {
 </div>
     )
 }
+
+export default Toolbar

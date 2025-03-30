@@ -1,19 +1,12 @@
-/**the react components */
 import { useRef, useEffect, useState } from "react";
-/** Usage of a react router */
-import { useSearchParams } from 'react-router-dom';
-/**  */
 import { BIMViewer } from "/src/xeokitBimViewerSrc/BIMViewer.js";
 import { Server } from "/src/xeokitBimViewerSrc/server/Server.js";
-/** the components of the viewer */
 import Explorer from "/src/viewer/Explorer"
 import Inspector from "/src/viewer/Inspector.tsx"
 import Toolbar from "/src/viewer/Toolbar"
-/** UI components */
+import { useSearchParams } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
-
 /* import { qs } from 'qs' */
-
 export default function Viewer() {
   /* The viewer instances */
   const bimViewer = useRef<typeof BIMViewer>(null);
@@ -26,8 +19,7 @@ export default function Viewer() {
   const toolbar = useRef(null);
   const viewerCanvas = useRef(null);
   const navCube = useRef(null);
-  
-  /** Get data from the URL */
+
   const requestedParams: any = useRef(null)  
   const bcfViewPoint = useRef('the string');
 
@@ -38,7 +30,7 @@ export default function Viewer() {
  
   const listOfProjects = { projects: [] };
 
-
+  let [componentState, setcomponentsState] = useState(true)
   
   getRequestParams()
 
@@ -78,6 +70,9 @@ export default function Viewer() {
     bimViewer.current.loadBCFViewpoint(bcfViewPoint.current, { immediate: false})
   }
   function loadViewer(project: string | null) {
+    setcomponentsState(()=> true)
+    
+     if (!componentState) return
     bimViewerServer.current = new Server({
       dataDir: "./",
     })
@@ -103,6 +98,7 @@ export default function Viewer() {
     bimViewer.current.on("openInspector", () => {
       console.log("open inspector");
     })
+ 
   }
   return (
     <div
@@ -110,14 +106,15 @@ export default function Viewer() {
       className="flex flex-row overflow-hidden h-full w-full"
     >
       <div ref={explorer} id="explorer" className="w-1/4 overflow-hidden h-full">
-           <Explorer /> 
+          {componentState ? <Explorer /> : <div>Loading...</div>}
       </div>
       <div id="viewer" className="w-1/2 overflow-hidden relative h-full ">
         <div ref={toolbar} id="toolbar" className="absolute top-0 left-0">
-        <Toolbar /> 
+        { componentState ? <div><Toolbar /> 
         <button className="xeokit-btn" onClick={saveBCFViewpoint} >save Viewpoint</button> 
         <button className="xeokit-btn" onClick={loadBCFViewpoint} >SET  Viewpoint</button>
         <button className="xeokit-btn" onClick={handleCopy} >Возьми ссылку</button>
+        </div>  : <div> Нет еще</div>}
         </div>
         <canvas
           ref={viewerCanvas}
@@ -131,7 +128,7 @@ export default function Viewer() {
         ></canvas>
       </div>
       <div ref={inspector} id="inspector" className="w-1/4 overflow-hidden ">
-      <Inspector /> 
+      { componentState ? <Inspector /> : <div> Нет еще</div>}
       </div>
     </div>
   );
